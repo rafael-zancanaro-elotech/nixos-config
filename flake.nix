@@ -29,7 +29,8 @@
               nixpkgs.overlays = [
                 (final: prev: {
                   netextender = final.callPackage ./derivations/sonicwall-netextender.nix {
-                    buildFHSUserEnv = final.buildFHSUserEnv;
+                    # O buildFHSUserEnv está disponível no final (pkgs)
+                    inherit (final) buildFHSUserEnv;
                   };
                 })
               ];
