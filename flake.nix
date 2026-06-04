@@ -23,18 +23,6 @@
 
           modules = [
             ./configuration.nix
-
-            # Overlay para adicionar o netextender
-            {
-              nixpkgs.overlays = [
-                (final: prev: {
-                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix {
-                    pkgs = final;
-                  };
-                })
-              ];
-            }
-
             home-manager.nixosModules.home-manager
 
             {
@@ -45,7 +33,7 @@
                 {
                   imports = [ ./home.nix ];
                   home.packages = with pkgs; [
-                    netextender
+                    (pkgs.callPackage ./derivations/sonicwall-netextender.nix { })
                   ];
                 };
             }
