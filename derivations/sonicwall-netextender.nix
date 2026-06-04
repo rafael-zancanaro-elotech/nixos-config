@@ -1,17 +1,20 @@
 {
   stdenv,
   fetchurl,
-  buildFHSUserEnv,
   ppp,
   zlib,
   openjdk,
-  writeShellScriptBin,
   lib,
+  writeShellScriptBin,
 }:
 
 let
   version = "10.3.5-36";
   sha256 = "iFgvqW+x3fKHaDvDZqcZil4+bs3Edz35E236Pkk9o4Y";
+
+  # Importar buildFHSUserEnv do pkgs
+  pkgs = import <nixpkgs> { };
+  buildFHSUserEnv = pkgs.buildFHSUserEnv;
 
   src = fetchurl {
     url = "https://software.sonicwall.com/NetExtender/NetExtender-linux-amd64-${version}.tar.gz";
@@ -27,6 +30,7 @@ let
       mkdir -p $out
       tar xzf $src -C $out
       chmod -R u+w $out
+      ls -la $out
     '';
   };
 
@@ -40,7 +44,6 @@ let
         zlib
         openjdk
         stdenv.cc.cc.lib
-        # Bibliotecas adicionais que podem ser necessárias
         libpcap
         xorg.libX11
         xorg.libXext
@@ -49,15 +52,20 @@ let
       ];
 
     runScript = writeShellScriptBin "run-netextender" ''
+      echo "Procurando NetExtender em: ${extracted}"
+      ls -la ${extracted}
+
       # Encontrar o executável do NetExtender
       if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
+        echo "Executando NetExtender..."
         exec "${extracted}/NetExtender/bin/netExtender" "$@"
       elif [ -f "${extracted}/netExtender" ]; then
+        echo "Executando NetExtender..."
         exec "${extracted}/netExtender" "$@"
       else
         echo "Erro: Não encontrou o executável do NetExtender"
-        echo "Procurando em: ${extracted}"
-        find ${extracted} -name "netExtender" -type f 2>/dev/null
+        echo "Buscando em toda a árvore:"
+        find ${extracted} -name "netExtender" -o -name "NetExtender" -type f 2>/dev/null
         exit 1
       fi
     '';
