@@ -1,35 +1,89 @@
 {
-  pkgs ? import <nixpkgs> { },
+  stdenv,
+  fetchurl,
+  buildFHSUserEnv,
+  ppp,
+  zlib,
+  openjdk,
+  writeShellScriptBin,
+  lib,
 }:
 
 let
-  version = "10.3.5-36"; # <<< ATUALIZE
-  src = pkgs.fetchurl {
+  version = "10.3.5-36";
+  sha256 = "iFgvqW+x3fKHaDvDZqcZil4+bs3Edz35E236Pkk9o4Y";
+
+  src = fetchurl {
     url = "https://software.sonicwall.com/NetExtender/NetExtender-linux-amd64-${version}.tar.gz";
-    sha256 = "11m37m4kxykd2gwksxy4rmp3wpla36kndhrvd23z5pdidyljyn48"; # <<< ATUALIZE
+    inherit sha256;
   };
+
+  # Extrair os arquivos do NetExtender
+  extracted = stdenv.mkDerivation {
+    name = "netextender-${version}-extracted";
+    inherit src;
+
+    installPhase = ''
+      mkdir -p $out
+      tar xzf $src -C $out
+      chmod -R u+w $out
+    '';
+  };
+
+  # Criar o ambiente FHS com o NetExtender
+  netextender-env = buildFHSUserEnv {
+    name = "netextender-${version}-env";
+
+    targetPkgs =
+      pkgs: with pkgs; [
+        ppp
+        zlib
+        openjdk
+        stdenv.cc.cc.lib
+        # Bibliotecas adicionais que podem ser necessárias
+        libpcap
+        xorg.libX11
+        xorg.libXext
+        xorg.libXtst
+        xorg.libXi
+      ];
+
+    runScript = writeShellScriptBin "run-netextender" ''
+      # Encontrar o executável do NetExtender
+      if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
+        exec "${extracted}/NetExtender/bin/netExtender" "$@"
+      elif [ -f "${extracted}/netExtender" ]; then
+        exec "${extracted}/netExtender" "$@"
+      else
+        echo "Erro: Não encontrou o executável do NetExtender"
+        echo "Procurando em: ${extracted}"
+        find ${extracted} -name "netExtender" -type f 2>/dev/null
+        exit 1
+      fi
+    '';
+  };
+
 in
-pkgs.buildFHSEnv {
+stdenv.mkDerivation {
   name = "netextender-${version}";
 
-  targetPkgs =
-    pkgs: with pkgs; [
-      pkgs.ppp
-      pkgs.zlib
-      pkgs.openjdk
-      pkgs.stdenv.cc.cc.lib
-    ];
+  buildInputs = [ netextender-env ];
 
-  runScript = pkgs.writeShellScript "netextender-install" ''
-    set -e
-    echo "Extraindo NetExtender ${version}..."
-    tar xzf ${src} -C /tmp
-    cd /tmp/NetExtender
+  installPhase = ''
+    mkdir -p $out/bin
 
-    echo "Executando o instalador..."
-    echo "y" | sudo ./install
+    # Criar um wrapper simples
+    cat > $out/bin/netextender << EOF
+    #!${stdenv.shell}
+    exec ${netextender-env}/bin/run-netextender "\$@"
+    EOF
 
-    echo "Instalação concluída! O executável está em /usr/share/NetExtender."
-    echo "Você pode executá-lo agora com: /usr/share/NetExtender/netExtender"
+    chmod +x $out/bin/netextender
   '';
+
+  meta = with lib; {
+    description = "SonicWall NetExtender VPN client";
+    platforms = platforms.linux;
+    license = licenses.unfree;
+  };
 }
