@@ -10,7 +10,7 @@
 
 let
   version = "10.3.5-36";
-  sha256 = "0zi6bx92v1sndq41pygs0b5xilhyj7hwl5n2z6h9dl8nrwq9scj4";
+  sha256 = "11m37m4kxykd2gwksxy4rmp3wpla36kndhrvd23z5pdidyljyn48";
 
   src = fetchurl {
     url = "https://software.sonicwall.com/NetExtender/NetExtender-linux-amd64-${version}.tar.gz";
