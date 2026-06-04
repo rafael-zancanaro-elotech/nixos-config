@@ -10,24 +10,59 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
 
-        modules = [
-          ./configuration.nix
+      # Overlay com pacotes customizados
+      customOverlay = final: prev: {
+        netextender = final.callPackage ./derivations/sonicwall-netextender.nix { };
+        # Se tiver outros pacotes customizados no futuro, adicione aqui
+      };
 
-          home-manager.nixosModules.home-manager
+      # Aplica o overlay ao nixpkgs
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ customOverlay ];
+      };
+    in
+    {
+      nixosConfigurations = {
+        nixos = nixpkgs.lib.nixosSystem {
+          inherit system;
 
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
+          # Importante: usar os pkgs com overlay
+          modules = [
+            ./configuration.nix
 
-            home-manager.users.zancanaro = import ./home.nix;
-          }
-        ];
+            home-manager.nixosModules.home-manager
+
+            {
+              # Usar os pkgs com overlay
+              nixpkgs.pkgs = pkgs;
+
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+
+              home-manager.users.zancanaro =
+                { config, ... }:
+                {
+                  imports = [ ./home.nix ];
+
+                  # Adicionar o NetExtender aos pacotes do usuário
+                  home.packages = with pkgs; [
+                    netextender
+                  ];
+                };
+            }
+          ];
+        };
       };
     };
-  };
 }
