@@ -16,10 +16,22 @@
       home-manager,
       ...
     }@inputs:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+
+      netextender = pkgs.callPackage ./derivations/sonicwall-netextender.nix { };
+    in
     {
+      packages.${system} = {
+        inherit netextender;
+      };
+
+      defaultPackage.${system} = netextender;
+
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
 
           modules = [
             ./configuration.nix
@@ -33,7 +45,7 @@
                 {
                   imports = [ ./home.nix ];
                   home.packages = with pkgs; [
-                    (pkgs.callPackage ./derivations/sonicwall-netextender.nix { })
+                    netextender
                   ];
                 };
             }

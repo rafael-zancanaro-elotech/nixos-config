@@ -6,10 +6,13 @@
   openjdk,
   lib,
   writeShellScriptBin,
-  buildFHSUserEnv,
 }:
 
 let
+  # Importar pkgs para ter acesso ao buildFHSUserEnv
+  pkgs = import <nixpkgs> { config.allowUnfree = true; };
+  buildFHSUserEnv = pkgs.buildFHSUserEnv;
+
   version = "10.3.5-36";
   sha256 = "iFgvqW+x3fKHaDvDZqcZil4+bs3Edz35E236Pkk9o4Y";
 
@@ -28,9 +31,6 @@ let
       chmod -R u+w $out
       echo "Conteúdo extraído:"
       ls -la $out
-      echo ""
-      echo "Procurando por executáveis:"
-      find $out -name "netExtender" -o -name "install" 2>/dev/null
     '';
   };
 
@@ -57,7 +57,7 @@ buildFHSUserEnv {
       exec "${extracted}/netExtender" "$@"
     else
       echo "Erro: NetExtender não encontrado!"
-      echo "Conteúdo completo de ${extracted}:"
+      echo "Conteúdo de ${extracted}:"
       ls -la ${extracted}
       exit 1
     fi
