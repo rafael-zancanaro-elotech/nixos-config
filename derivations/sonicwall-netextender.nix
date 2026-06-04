@@ -1,12 +1,12 @@
 {
   stdenv,
   fetchurl,
-  buildFHSUserEnv,
   ppp,
   zlib,
   openjdk,
   lib,
   writeShellScriptBin,
+  buildFHSUserEnv,
 }:
 
 let
@@ -43,22 +43,20 @@ buildFHSUserEnv {
       stdenv.cc.cc.lib
     ];
 
-  runScript = writeShellScriptBin "netextender" ''
-    echo "NetExtender wrapper iniciado..."
-    echo "Procurando executável em: ${extracted}"
+  runScript =
+    "netextender"
+    + writeShellScriptBin "netextender-run" ''
+      echo "NetExtender wrapper iniciado..."
 
-    # Tenta encontrar o executável
-    if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
-      echo "Executando NetExtender..."
-      exec "${extracted}/NetExtender/bin/netExtender" "$@"
-    elif [ -f "${extracted}/netExtender" ]; then
-      echo "Executando NetExtender..."
-      exec "${extracted}/netExtender" "$@"
-    else
-      echo "Erro: NetExtender não encontrado!"
-      echo "Estrutura do diretório extraído:"
-      find ${extracted} -type f -name "netExtender" -o -name "*.sh" -o -name "install" 2>/dev/null | head -20
-      exit 1
-    fi
-  '';
+      if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
+        echo "Executando NetExtender..."
+        exec "${extracted}/NetExtender/bin/netExtender" "$@"
+      elif [ -f "${extracted}/netExtender" ]; then
+        echo "Executando NetExtender..."
+        exec "${extracted}/netExtender" "$@"
+      else
+        echo "Erro: NetExtender não encontrado!"
+        exit 1
+      fi
+    '';
 }

@@ -28,10 +28,7 @@
             {
               nixpkgs.overlays = [
                 (final: prev: {
-                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix {
-                    # O buildFHSUserEnv está disponível no final (pkgs)
-                    inherit (final) buildFHSUserEnv;
-                  };
+                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix { };
                 })
               ];
             }
@@ -45,7 +42,6 @@
                 { config, pkgs, ... }:
                 {
                   imports = [ ./home.nix ];
-
                   home.packages = with pkgs; [
                     netextender
                   ];
