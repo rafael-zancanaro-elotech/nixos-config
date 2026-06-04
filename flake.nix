@@ -28,7 +28,9 @@
             {
               nixpkgs.overlays = [
                 (final: prev: {
-                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix { };
+                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix {
+                    pkgs = final;
+                  };
                 })
               ];
             }

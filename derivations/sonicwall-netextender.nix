@@ -6,7 +6,7 @@
   openjdk,
   lib,
   writeShellScriptBin,
-  buildFHSUserEnv,
+  pkgs,
 }:
 
 let
@@ -32,7 +32,7 @@ let
   };
 
 in
-buildFHSUserEnv {
+pkgs.buildFHSUserEnv {
   name = "netextender-${version}";
 
   targetPkgs =
@@ -43,20 +43,20 @@ buildFHSUserEnv {
       stdenv.cc.cc.lib
     ];
 
-  runScript =
-    "netextender"
-    + writeShellScriptBin "netextender-run" ''
-      echo "NetExtender wrapper iniciado..."
+  runScript = ''
+    echo "NetExtender wrapper iniciado..."
 
-      if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
-        echo "Executando NetExtender..."
-        exec "${extracted}/NetExtender/bin/netExtender" "$@"
-      elif [ -f "${extracted}/netExtender" ]; then
-        echo "Executando NetExtender..."
-        exec "${extracted}/netExtender" "$@"
-      else
-        echo "Erro: NetExtender não encontrado!"
-        exit 1
-      fi
-    '';
+    if [ -f "${extracted}/NetExtender/bin/netExtender" ]; then
+      echo "Executando NetExtender..."
+      exec "${extracted}/NetExtender/bin/netExtender" "$@"
+    elif [ -f "${extracted}/netExtender" ]; then
+      echo "Executando NetExtender..."
+      exec "${extracted}/netExtender" "$@"
+    else
+      echo "Erro: NetExtender não encontrado!"
+      echo "Procurando em: ${extracted}"
+      find ${extracted} -name "netExtender" -o -name "*.sh" 2>/dev/null
+      exit 1
+    fi
+  '';
 }
