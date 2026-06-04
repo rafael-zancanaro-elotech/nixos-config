@@ -5,7 +5,9 @@
   zlib,
   openjdk,
   buildFHSEnv,
-  writeShellScriptBin,
+  glib,
+  gtk3,
+  webkitgtk,
 }:
 
 let
@@ -24,51 +26,37 @@ let
       mkdir -p $out
       tar xzf $src -C $out
       chmod -R +w $out
-      echo "Extraído para: $out"
-      ls -la $out/NetExtender/bin/
+      # Mover os arquivos do subdiretório netextender para o root
+      mv $out/netextender/* $out/
+      rmdir $out/netextender
+      chmod +x $out/nxcli $out/NetExtender_webkit2_41 $out/neservice
     '';
   };
 
-  # Criar o ambiente FHS
-  fhsEnv = buildFHSEnv {
-    name = "netextender-fhs";
-    targetPkgs =
-      pkgs: with pkgs; [
-        ppp
-        zlib
-        openjdk
-        stdenv.cc.cc.lib
-      ];
-    runScript = "netextender-real";
-  };
-
-  # Criar o script real que será executado dentro do FHS
-  realScript = writeShellScriptBin "netextender-real" ''
-    export PATH=${stdenv.cc.cc.lib}/lib:$PATH
-    export LD_LIBRARY_PATH=${stdenv.cc.cc.lib}/lib:${zlib}/lib:${openjdk}/lib:${ppp}/lib:$LD_LIBRARY_PATH
-
-    echo "Iniciando NetExtender..."
-    exec ${extracted}/NetExtender/bin/netExtender "$@"
-  '';
-
 in
-stdenv.mkDerivation {
-  name = "netextender-${version}";
+buildFHSEnv {
+  name = "netextender";
 
-  buildInputs = [
-    fhsEnv
-    realScript
-  ];
+  targetPkgs =
+    pkgs: with pkgs; [
+      ppp
+      zlib
+      openjdk
+      stdenv.cc.cc.lib
+      glib
+      gtk3
+      webkitgtk
+      libGL
+      xorg.libX11
+      xorg.libXext
+      xorg.libXtst
+      xorg.libXi
+      xorg.libXrender
+    ];
 
-  installPhase = ''
-    mkdir -p $out/bin
-
-    # Wrapper principal
-    cat > $out/bin/netextender << EOF
-    #!${stdenv.shell}
-    exec ${fhsEnv}/bin/netextender-fhs "\$@"
-    EOF
-
-    chmod +x $out/bin/netextender
+  runScript = ''
+    echo "Iniciando NetExtender..."
+    cd ${extracted}
+    exec ${extracted}/NetExtender_webkit2_41 "$@"
   '';
 }
