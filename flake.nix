@@ -20,15 +20,20 @@
     let
       system = "x86_64-linux";
 
+      # Configuração do nixpkgs (moveu o allowUnfree para cá)
+      pkgsConfig = {
+        allowUnfree = true;
+      };
+
       # Overlay com pacotes customizados
       customOverlay = final: prev: {
         netextender = final.callPackage ./derivations/sonicwall-netextender.nix { };
-        # Se tiver outros pacotes customizados no futuro, adicione aqui
       };
 
-      # Aplica o overlay ao nixpkgs
+      # Cria a instância do pkgs com a configuração e overlay
       pkgs = import nixpkgs {
         inherit system;
+        config = pkgsConfig;
         overlays = [ customOverlay ];
       };
     in
@@ -37,25 +42,27 @@
         nixos = nixpkgs.lib.nixosSystem {
           inherit system;
 
-          # Importante: usar os pkgs com overlay
+          specialArgs = {
+            inherit pkgs;
+          };
+
           modules = [
             ./configuration.nix
+
+            # Passar o pkgs configurado para o sistema
+            {
+              nixpkgs.pkgs = pkgs;
+            }
 
             home-manager.nixosModules.home-manager
 
             {
-              # Usar os pkgs com overlay
-              nixpkgs.pkgs = pkgs;
-
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-
               home-manager.users.zancanaro =
                 { config, ... }:
                 {
                   imports = [ ./home.nix ];
-
-                  # Adicionar o NetExtender aos pacotes do usuário
                   home.packages = with pkgs; [
                     netextender
                   ];
