@@ -6,7 +6,7 @@
 {
   home.packages = with pkgs; [
     zed-editor
-    jetbrains.idea-ultimate
+    jetbrains.idea
     dbeaver-bin
   ];
 }
