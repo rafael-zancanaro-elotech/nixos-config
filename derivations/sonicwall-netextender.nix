@@ -7,7 +7,6 @@
   buildFHSEnv,
   glib,
   gtk3,
-  webkitgtk,
 }:
 
 let
@@ -45,18 +44,23 @@ buildFHSEnv {
       stdenv.cc.cc.lib
       glib
       gtk3
-      webkitgtk
       libGL
       xorg.libX11
       xorg.libXext
       xorg.libXtst
       xorg.libXi
       xorg.libXrender
+      xorg.libxcb
+      libxkbcommon
+      dbus
+      fontconfig
+      freetype
     ];
 
   runScript = ''
     echo "Iniciando NetExtender..."
     cd ${extracted}
+    export LD_LIBRARY_PATH=${extracted}:$LD_LIBRARY_PATH
     exec ${extracted}/NetExtender_webkit2_41 "$@"
   '';
 }
