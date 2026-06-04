@@ -28,7 +28,9 @@
             {
               nixpkgs.overlays = [
                 (final: prev: {
-                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix { };
+                  netextender = final.callPackage ./derivations/sonicwall-netextender.nix {
+                    buildFHSUserEnv = final.buildFHSUserEnv;
+                  };
                 })
               ];
             }
@@ -43,7 +45,6 @@
                 {
                   imports = [ ./home.nix ];
 
-                  # Adicionar netextender aos pacotes do usuário
                   home.packages = with pkgs; [
                     netextender
                   ];
