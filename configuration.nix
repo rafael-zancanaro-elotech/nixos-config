@@ -97,6 +97,7 @@
       #  thunderbird
       nil
       nixd
+      nix-ld
     ];
   };
 
