@@ -14,7 +14,7 @@
       };
 
       netextender = pkgs.callPackage ./derivations/sonicwall-netextender.nix { };
-      jasperreports = pkgs.callPackage ./derivations/jasperreports.nix { };
+      jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix { };
     in
     {
       packages.${system} = {
@@ -41,7 +41,7 @@
 
                   home.packages = with pkgs; [
                     netextender
-                    jasperreports
+                    jaspersoft-studio
                   ];
                 };
             }
