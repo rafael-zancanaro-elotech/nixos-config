@@ -10,4 +10,5 @@
     dbeaver-bin
     postgresql
   ];
+  services.postgresql.enableTCPIP = true;
 }
