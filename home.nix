@@ -31,11 +31,4 @@
     userName = "Rafael Monteiro Zancanaro";
     userEmail = "rafael.zancanaro@elotech.com.br";
   };
-
-  home.shellAliases = {
-    nx = "netextender --gui";
-    nx-connect = "netextender connect";
-    nx-status = "netextender status";
-    nx-disconnect = "netextender disconnect";
-  };
 }
