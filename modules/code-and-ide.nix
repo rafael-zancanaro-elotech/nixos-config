@@ -8,5 +8,6 @@
     zed-editor
     jetbrains.idea
     dbeaver-bin
+    postgresql
   ];
 }
