@@ -18,7 +18,7 @@
     in
     {
       packages.${system} = {
-        inherit netextender jasperreports;
+        inherit netextender jaspersoft-studio;
       };
 
       defaultPackage.${system} = netextender;
