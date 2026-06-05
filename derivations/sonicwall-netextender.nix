@@ -20,6 +20,16 @@
   dbus,
   fontconfig,
   freetype,
+  gdk-pixbuf,
+  pango,
+  cairo,
+  atk,
+  libsoup_3,
+  libsecret,
+  libnotify,
+  libxslt,
+  libxml2,
+  gst_all_1,
 }:
 
 let
@@ -54,6 +64,10 @@ buildFHSEnv {
       webkitgtk_4_1
       glib
       gtk3
+      gdk-pixbuf
+      pango
+      cairo
+      atk
       libGL
       libx11
       libxext
@@ -65,6 +79,15 @@ buildFHSEnv {
       dbus
       fontconfig
       freetype
+      libsoup_3
+      libsecret
+      libnotify
+      libxslt
+      libxml2
+      gst_all_1.gstreamer
+      gst_all_1.gst-plugins-base
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
     ];
 
   runScript = ''
@@ -77,6 +100,8 @@ buildFHSEnv {
 
     # Executar a GUI do NetExtender
     echo "Iniciando NetExtender GUI..."
+    export GDK_BACKEND=x11
+    export WEBKIT_DISABLE_COMPOSITING_MODE=1
     exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
   '';
 }
