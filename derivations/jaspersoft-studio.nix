@@ -18,6 +18,7 @@
 let
   version = "6.21.5";
   pname = "jaspersoft-studio";
+  executable = "$HOME/.local/opt/js-studiocomm_${version}/Jaspersoft Studio";
 
   # Criar o ambiente FHS
   fhsEnv = buildFHSEnv {
@@ -38,10 +39,13 @@ let
         stdenv.cc.cc.lib
       ];
 
-    runScript = "$HOME/.local/opt/js-studiocomm_${version}/Jaspersoft Studio";
+    # Usar aspas para lidar com espaço no caminho
+    runScript = writeShellScriptBin "run-jaspersoft" ''
+      exec "${executable}" "$@"
+    '';
   };
 
 in
 writeShellScriptBin "jaspersoft-studio" ''
-  exec ${fhsEnv}/bin/${pname}-${version}-env "$@"
+  exec ${fhsEnv}/bin/run-jaspersoft "$@"
 ''
