@@ -1,14 +1,4 @@
 {
-  description = "Configuração do PC Elotech";
-
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-
   outputs =
     {
       self,
@@ -24,10 +14,11 @@
       };
 
       netextender = pkgs.callPackage ./derivations/sonicwall-netextender.nix { };
+      jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix { };
     in
     {
       packages.${system} = {
-        inherit netextender;
+        inherit netextender jaspersoft-studio;
       };
 
       defaultPackage.${system} = netextender;
@@ -48,9 +39,9 @@
                 {
                   imports = [ ./home.nix ];
 
-                  # Adicionar netextender aos pacotes do usuário
                   home.packages = with pkgs; [
                     netextender
+                    jaspersoft-studio
                   ];
                 };
             }

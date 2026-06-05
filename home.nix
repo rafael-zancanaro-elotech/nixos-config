@@ -9,6 +9,8 @@
     ./modules/misc.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. Do not change this without reading the release notes.
   home.stateVersion = "26.05"; # Match to your release version
