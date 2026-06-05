@@ -27,13 +27,6 @@
     glow
   ];
 
-  dconf.settings = {
-    "org/gtk/settings/file-chooser" = {
-      sort-directories-first = true;
-      show-hidden = false;
-    };
-  };
-
   # Example: configure git directly via home-manager
   programs.git = {
     enable = true;

@@ -127,6 +127,20 @@
 
       # WebKit para GUI
       webkitgtk_4_1
+
+      glib
+      glib-networking
+      gsettings-desktop-schemas
+      gtk-engine-murrine
+      librsvg
+      libxml2
+      shared-mime-info
+
+      # Para o file chooser
+      gdk-pixbuf
+      pango
+      cairo
+      atk
     ];
   };
 
