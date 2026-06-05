@@ -1,7 +1,35 @@
 {
   stdenv,
   fetchurl,
-  writeShellScriptBin,
+  buildFHSEnv,
+  ppp,
+  zlib,
+  openjdk,
+  lib,
+  webkitgtk_4_1,
+  glib,
+  gtk3,
+  gdk-pixbuf,
+  pango,
+  cairo,
+  atk,
+  libGL,
+  libx11,
+  libxext,
+  libxtst,
+  libxi,
+  libxrender,
+  libxcb,
+  libxkbcommon,
+  dbus,
+  fontconfig,
+  freetype,
+  libsoup_3,
+  libsecret,
+  libnotify,
+  libxslt,
+  libxml2,
+  gst_all_1,
 }:
 
 let
@@ -24,19 +52,60 @@ let
   };
 
 in
-writeShellScriptBin "netextender" ''
-  # Verificar se o serviço está rodando
-  if ! pgrep -f "${extracted}/netextender/NEService" > /dev/null; then
-    echo "Iniciando NEService (pode pedir sua senha)..."
-    sudo ${extracted}/netextender/NEService &
-    sleep 2
-  fi
+buildFHSEnv {
+  name = "netextender";
 
-  # Executar o CLI ou GUI
-  if [ "$1" = "--gui" ] || [ "$1" = "-g" ]; then
-    shift
-    exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
-  else
-    exec ${extracted}/netextender/nxcli "$@"
-  fi
-''
+  targetPkgs =
+    pkgs: with pkgs; [
+      ppp
+      zlib
+      openjdk
+      stdenv.cc.cc.lib
+      webkitgtk_4_1
+      glib
+      gtk3
+      gdk-pixbuf
+      pango
+      cairo
+      atk
+      libGL
+      libx11
+      libxext
+      libxtst
+      libxi
+      libxrender
+      libxcb
+      libxkbcommon
+      dbus
+      fontconfig
+      freetype
+      libsoup_3
+      libsecret
+      libnotify
+      libxslt
+      libxml2
+      gst_all_1.gstreamer
+      gst_all_1.gst-plugins-base
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
+    ];
+
+  runScript = ''
+    # Iniciar o serviço se não estiver rodando
+    if ! pgrep -f "${extracted}/netextender/NEService" > /dev/null; then
+      echo "Iniciando NEService..."
+      ${extracted}/netextender/NEService &
+      sleep 2
+    fi
+
+    # Executar o comando solicitado
+    if [ "$1" = "--gui" ] || [ "$1" = "-g" ]; then
+      shift
+      echo "Iniciando interface gráfica..."
+      export GDK_BACKEND=x11
+      exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
+    else
+      exec ${extracted}/netextender/nxcli "$@"
+    fi
+  '';
+}
