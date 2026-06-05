@@ -133,6 +133,12 @@
   # Install firefox.
   programs.firefox.enable = true;
 
+  services.postgresql = {
+    enable = true;
+    enableTCPIP = true; # <--- Esta é a linha crucial para conexões TCP/IP
+    # Suas outras configurações...
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
