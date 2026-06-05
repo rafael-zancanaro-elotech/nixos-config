@@ -5,7 +5,6 @@
   ppp,
   zlib,
   openjdk,
-  lib,
   webkitgtk_4_1,
   glib,
   gtk3,
@@ -99,13 +98,21 @@ buildFHSEnv {
     fi
 
     # Executar o comando solicitado
-    if [ "$1" = "--gui" ] || [ "$1" = "-g" ]; then
-      shift
-      echo "Iniciando interface gráfica..."
-      export GDK_BACKEND=x11
-      exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
-    else
-      exec ${extracted}/netextender/nxcli "$@"
-    fi
+    case "$1" in
+      --gui|-g)
+        shift
+        export GDK_BACKEND=x11
+        exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
+        ;;
+      connect|disconnect|status|about|cert|connection|log|proxy|settings)
+        exec ${extracted}/netextender/nxcli "$@"
+        ;;
+      "")
+        exec ${extracted}/netextender/nxcli
+        ;;
+      *)
+        exec ${extracted}/netextender/nxcli "$@"
+        ;;
+    esac
   '';
 }
