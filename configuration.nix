@@ -97,7 +97,36 @@
       #  thunderbird
       nil
       nixd
-      nix-ld
+    ];
+  };
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      # Bibliotecas básicas do sistema
+      stdenv.cc.cc.lib
+      zlib
+      glib
+
+      # Bibliotecas do NetExtender
+      ppp
+      openjdk
+
+      # Bibliotecas gráficas
+      gtk3
+      libGL
+      libx11
+      libxext
+      libxtst
+      libxi
+      libxrender
+      libxcb
+      libxkbcommon
+      dbus
+      fontconfig
+      freetype
+
+      # WebKit para GUI
+      webkitgtk_4_1
     ];
   };
 
