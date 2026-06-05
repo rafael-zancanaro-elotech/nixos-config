@@ -6,6 +6,20 @@
   zlib,
   openjdk,
   lib,
+  webkitgtk_4_1,
+  glib,
+  gtk3,
+  libGL,
+  libx11,
+  libxext,
+  libxtst,
+  libxi,
+  libxrender,
+  libxcb,
+  libxkbcommon,
+  dbus,
+  fontconfig,
+  freetype,
 }:
 
 let
@@ -20,15 +34,10 @@ let
   extracted = stdenv.mkDerivation {
     name = "netextender-${version}-extracted";
     inherit src;
-    buildInputs = [ ];
     installPhase = ''
       mkdir -p $out
       tar xzf $src -C $out
-      # Garantir permissões de execução durante a extração
       chmod -R 755 $out/netextender
-      # Verificar se os binários estão executáveis
-      test -x $out/netextender/neservice || echo "ERRO: neservice não está executável"
-      test -x $out/netextender/nxcli || echo "ERRO: nxcli não está executável"
     '';
   };
 
@@ -42,6 +51,7 @@ buildFHSEnv {
       zlib
       openjdk
       stdenv.cc.cc.lib
+      webkitgtk_4_1
       glib
       gtk3
       libGL
@@ -69,10 +79,4 @@ buildFHSEnv {
     echo "Iniciando NetExtender GUI..."
     exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
   '';
-
-  meta = with lib; {
-    description = "SonicWall NetExtender VPN client";
-    platforms = platforms.linux;
-    license = licenses.unfree;
-  };
 }
