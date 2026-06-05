@@ -133,6 +133,42 @@
   # Install firefox.
   programs.firefox.enable = true;
 
+  networking.extraHosts = ''
+    127.0.0.1       angulo.localnet.qa.elotech.com.br
+    127.0.0.1       ibipora.localnet.qa.elotech.com.br
+    127.0.0.1       angulo.localnet.dev.elotech.com.br
+    127.0.0.1       unico.localnet.dev.elotech.com.br
+    127.0.0.1       unico.localnet.qa.elotech.com.br
+    127.0.0.1       elotech.localnet.dev.elotech.com.br
+    127.0.0.1       angulo.localnet.dev.elotech.com.br
+    127.0.0.1       elotech.localnet.qa.elotech.com.br
+    127.0.0.1       angulo.localnet.qa.elotech.com.br
+    127.0.0.1       mppr.localnet.qa.elotech.com.br
+    127.0.0.1       elotech.localnet.elotech.com.br
+    127.0.0.1       angulo.localnet.elotech.com.br
+    127.0.0.1       anguloadm.localnet.dev.elotech.com.br
+    127.0.0.1       campinagrandedosul.localnet.elotech.com.br
+    127.0.0.1       campinagrandedosul.localnet.qa.elotech.com.bru
+    127.0.0.1       campinagrandedosul.localnet.dev.elotech.com.br
+    127.0.0.1       marialva.localnet.qa.elotech.com.br
+    127.0.0.1       marialva.localnet.dev.elotech.com.br
+    127.0.0.1       palmeira.localnet.eloweb.elotech.com.br
+    127.0.0.1       umuarama.localnet.eloweb.elotech.com.br
+    127.0.0.1       rabbit.dev.local
+    127.0.0.1       paraisodonorte.localnet.qa.elotech.com.br
+    127.0.0.1       paraisodonorte.localnet.oxy.elotech.com.br
+    127.0.0.1       marialva.localnet.elotech.com.br
+    127.0.0.1       bentogoncalves.localnet.qa.elotech.com.br
+    127.0.0.1       adm.localnet.qa.elotech.com.br
+    127.0.0.1       homologacaomaringa.localnet.qa.elotech.com.br
+    127.0.0.1       homologacaomaringa.cloudnet.qa.elotech.com.br
+    127.0.0.1       angulo.cloudnet.qa.elotech.com.br
+    127.0.0.1       adm.cloudnet.qa.elotech.com.br
+    127.0.0.1       mppr.localnet.qa.elotech.com.br
+    127.0.0.1       mppr.cloudnet.qa.elotech.com.br
+    127.0.0.1       bentogoncalves.cloudnet.qa.elotech.com.br
+  '';
+
   services.postgresql = {
     enable = true;
     enableTCPIP = true; # <--- Esta é a linha crucial para conexões TCP/IP
