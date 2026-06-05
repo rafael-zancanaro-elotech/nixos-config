@@ -14,7 +14,14 @@
       };
 
       netextender = pkgs.callPackage ./derivations/sonicwall-netextender.nix { };
-      jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix { };
+      jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix {
+        inherit (pkgs)
+          gsettings-desktop-schemas
+          gtk3
+          glib
+          glib-networking
+          ;
+      };
     in
     {
       packages.${system} = {
