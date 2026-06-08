@@ -19,17 +19,11 @@
     let
       system = "x86_64-linux";
 
-      # Importar overlays locais
-      netextenderOverlay = import ./overlays/netextender.nix;
-
       pkgs = import nixpkgs {
         inherit system;
         config = {
           allowUnfree = true;
         };
-        overlays = [
-          netextenderOverlay
-        ];
       };
 
       # Seu Jaspersoft Studio
@@ -73,7 +67,6 @@
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
                 home.packages = with pkgs; [
-                  netextender
                   jaspersoft-studio
                 ];
               };

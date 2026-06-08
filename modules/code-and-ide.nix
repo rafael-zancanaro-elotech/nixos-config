@@ -10,5 +10,6 @@
     dbeaver-bin
     nodejs_22
     yarn
+    vscode
   ];
 }
