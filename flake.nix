@@ -39,18 +39,34 @@
             home-manager.nixosModules.home-manager
 
             {
+              # Adicionar netextender aos pacotes do sistema
+              environment.systemPackages = with pkgs; [
+                netextender
+              ];
+
+              # Adicionar o serviço systemd
+              systemd.services.netextender = {
+                description = "SonicWall NetExtender Service";
+                after = [ "network.target" ];
+                wantedBy = [ "multi-user.target" ];
+                serviceConfig = {
+                  ExecStart = "${netextender}/bin/nxservice";
+                  Restart = "always";
+                  RestartSec = 5;
+                  Type = "simple";
+                  User = "root";
+                };
+              };
+
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.zancanaro =
-                { config, pkgs, ... }:
-                {
-                  imports = [ ./home.nix ];
-
-                  home.packages = with pkgs; [
-                    netextender
-                    jaspersoft-studio
-                  ];
-                };
+              home-manager.users.zancanaro = { config, pkgs, ... }: {
+                imports = [ ./home.nix ];
+                home.packages = with pkgs; [
+                  netextender
+                  jaspersoft-studio
+                ];
+              };
             }
           ];
         };
