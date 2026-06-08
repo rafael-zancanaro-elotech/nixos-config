@@ -197,6 +197,11 @@
     enable = true;
   };
 
+  systemd.services.network-addresses-ppp0 = {
+    wantedBy = [ "sys-subsystem-net-devices-ppp0.device" ];
+    serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 3";
+  };
+
   # Bibliotecas adicionais
   programs.steam = {
     enable = true;
