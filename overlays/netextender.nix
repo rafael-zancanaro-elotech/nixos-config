@@ -12,15 +12,29 @@ let
     name = "netextender-${version}-extracted";
     inherit src;
     installPhase = ''
-      mkdir -p $out
-      tar xzf $src -C $out
-      chmod -R 755 $out/netextender
+            mkdir -p $out
+            tar xzf $src -C $out
+            chmod -R 755 $out/netextender
 
-      mkdir -p $out/bin
-      ln -sf $out/netextender/nxcli $out/bin/netextender
-      ln -sf $out/netextender/neservice $out/bin/neservice
-      ln -sf $out/netextender/NEService $out/bin/NEService
-      ln -sf $out/netextender/NetExtender_webkit2_41 $out/bin/netextender-gui
+            mkdir -p $out/bin
+            ln -sf $out/netextender/nxcli $out/bin/netextender
+            ln -sf $out/netextender/neservice $out/bin/neservice
+            ln -sf $out/netextender/NEService $out/bin/NEService
+            ln -sf $out/netextender/NetExtender_webkit2_41 $out/bin/netextender-gui
+
+            # Script wrapper para adicionar rota automaticamente
+            cat > $out/bin/netextender-connect << 'WRAPPER'
+      #!/bin/bash
+      # Executa a conexão
+      $out/netextender/nxcli connect "$@" &
+      PID=$!
+      sleep 5
+      if ip link show ppp0 2>/dev/null; then
+        ip route add default dev ppp0 2>/dev/null
+      fi
+      wait $PID
+      WRAPPER
+            chmod +x $out/bin/netextender-connect
     '';
   };
 
@@ -53,7 +67,7 @@ in
         dbus
         fontconfig
         freetype
-        libsoup_3 # ADICIONADO: biblioteca libsoup
+        libsoup_3
         libsecret
         libnotify
         libxslt
@@ -61,24 +75,29 @@ in
       ];
 
     runScript = ''
-      # Verificar se a porta está livre antes de iniciar
+      # Verificar se a porta está livre
       if lsof -i :51330 > /dev/null 2>&1; then
-        echo "Porta 51330 ocupada. Matando processo antigo..."
         sudo kill -9 $(sudo lsof -t -i:51330) 2>/dev/null
         sleep 2
       fi
 
       # Iniciar o serviço
-      echo "Iniciando NEService..."
-      ${extracted}/netextender/NEService &
-      sleep 3
+      if ! pgrep -f NEService > /dev/null; then
+        ${extracted}/netextender/NEService &
+        sleep 3
+      fi
 
-      # Executar o comando solicitado
+      # Executar o comando
       case "$1" in
         --gui|-g)
           shift
           export GDK_BACKEND=x11
           exec ${extracted}/netextender/NetExtender_webkit2_41 "$@"
+          ;;
+        connect)
+          shift
+          exec ${extracted}/netextender/nxcli connect "$@" && \
+            sleep 5 && ip route add default dev ppp0 2>/dev/null
           ;;
         *)
           exec ${extracted}/netextender/nxcli "$@"
