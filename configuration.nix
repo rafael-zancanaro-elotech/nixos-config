@@ -195,11 +195,7 @@
   # Bibliotecas necessárias para steam-run
   hardware.opengl = {
     enable = true;
-    driSupport = true;
   };
-
-  # Suporte a 32 bits (necessário para steam-run)
-  hardware.opengl.driSupport32Bit = true;
 
   # Bibliotecas adicionais
   programs.steam = {
