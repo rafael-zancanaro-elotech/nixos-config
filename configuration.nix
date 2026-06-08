@@ -189,8 +189,24 @@
     # Suas outras configurações...
   };
 
-  # Allow unfree packages
+  # Permitir steam-run (que é unfree)
   nixpkgs.config.allowUnfree = true;
+
+  # Bibliotecas necessárias para steam-run
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+  };
+
+  # Suporte a 32 bits (necessário para steam-run)
+  hardware.opengl.driSupport32Bit = true;
+
+  # Bibliotecas adicionais
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
