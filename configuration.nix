@@ -197,9 +197,19 @@
     enable = true;
   };
 
-  systemd.services.network-addresses-ppp0 = {
-    wantedBy = [ "sys-subsystem-net-devices-ppp0.device" ];
-    serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 3";
+  # Serviço systemd para o NetExtender
+  systemd.services.netextender = {
+    description = "SonicWall NetExtender Service";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      ExecStart = "${pkgs.netextender}/bin/nxservice";
+      Restart = "always";
+      RestartSec = 5;
+      Type = "simple";
+      User = "root";
+    };
   };
 
   # Bibliotecas adicionais

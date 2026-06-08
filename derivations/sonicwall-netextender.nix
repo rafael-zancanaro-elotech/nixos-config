@@ -90,12 +90,13 @@ buildFHSEnv {
     ];
 
   runScript = ''
-    # Iniciar o serviço se não estiver rodando
-    if ! pgrep -f "${extracted}/netextender/NEService" > /dev/null; then
-      echo "Iniciando NEService..."
-      ${extracted}/netextender/NEService &
-      sleep 2
+    # Criar link para o serviço (fora do FHS)
+    if [ ! -f /run/current-system/sw/bin/nxservice ]; then
+      ln -sf ${extracted}/netextender/NEService /run/current-system/sw/bin/nxservice 2>/dev/null || true
     fi
+
+    # Iniciar o serviço via systemd
+    systemctl start netextender 2>/dev/null || true
 
     # Executar o comando solicitado
     case "$1" in
