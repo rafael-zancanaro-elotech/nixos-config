@@ -39,11 +39,8 @@
     in
     {
       packages.${system} = {
-        netextender = pkgs.netextender;
         jaspersoft-studio = jaspersoft-studio;
       };
-
-      defaultPackage.${system} = pkgs.netextender;
 
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
@@ -56,11 +53,6 @@
             {
               # Usar o pkgs com overlays
               nixpkgs.pkgs = pkgs;
-
-              # Adicionar ao sistema
-              environment.systemPackages = with pkgs; [
-                netextender
-              ];
 
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
