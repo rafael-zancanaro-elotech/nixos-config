@@ -3,15 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Overlay do NetExtender
-    netextender = {
-      url = "github:irlnuisance/netextender-nix-overlay";
     };
   };
 
@@ -20,24 +14,25 @@
       self,
       nixpkgs,
       home-manager,
-      netextender,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
 
-      # Criar pkgs com o overlay do NetExtender
+      # Importar overlays locais
+      netextenderOverlay = import ./overlays/netextender.nix;
+
       pkgs = import nixpkgs {
         inherit system;
         config = {
           allowUnfree = true;
         };
         overlays = [
-          netextender.overlays.${system}
+          netextenderOverlay
         ];
       };
 
-      # Seu Jaspersoft Studio continua manual
+      # Seu Jaspersoft Studio
       jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix {
         inherit (pkgs)
           gsettings-desktop-schemas
@@ -65,10 +60,10 @@
             home-manager.nixosModules.home-manager
 
             {
-              # Passar o pkgs com overlay
+              # Usar o pkgs com overlays
               nixpkgs.pkgs = pkgs;
 
-              # Adicionar netextender aos pacotes do sistema
+              # Adicionar ao sistema
               environment.systemPackages = with pkgs; [
                 netextender
               ];
