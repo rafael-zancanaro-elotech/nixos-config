@@ -190,7 +190,7 @@
   };
 
   # Permitir steam-run (que é unfree)
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
 
   # Bibliotecas necessárias para steam-run
   hardware.opengl = {
