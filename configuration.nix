@@ -198,21 +198,6 @@
     enable = true;
   };
 
-  # Serviço systemd para o NetExtender
-  systemd.services.netextender = {
-    description = "SonicWall NetExtender Service";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-
-    serviceConfig = {
-      ExecStart = "${pkgs.netextender}/bin/nxservice";
-      Restart = "always";
-      RestartSec = 5;
-      Type = "simple";
-      User = "root";
-    };
-  };
-
   # Bibliotecas adicionais
   programs.steam = {
     enable = true;
