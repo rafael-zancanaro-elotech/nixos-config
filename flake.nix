@@ -1,19 +1,43 @@
 {
+  description = "Configuração do PC Elotech";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Overlay do NetExtender
+    netextender = {
+      url = "github:irlnuisance/netextender-nix-overlay";
+    };
+  };
+
   outputs =
     {
       self,
       nixpkgs,
       home-manager,
+      netextender,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
+
+      # Criar pkgs com o overlay do NetExtender
       pkgs = import nixpkgs {
         inherit system;
-        config.allowUnfree = true;
+        config = {
+          allowUnfree = true;
+        };
+        overlays = [
+          netextender.overlays.${system}
+        ];
       };
 
-      netextender = pkgs.callPackage ./derivations/sonicwall-netextender.nix { };
+      # Seu Jaspersoft Studio continua manual
       jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix {
         inherit (pkgs)
           gsettings-desktop-schemas
@@ -22,13 +46,15 @@
           glib-networking
           ;
       };
+
     in
     {
       packages.${system} = {
-        inherit netextender jaspersoft-studio;
+        netextender = pkgs.netextender;
+        jaspersoft-studio = jaspersoft-studio;
       };
 
-      defaultPackage.${system} = netextender;
+      defaultPackage.${system} = pkgs.netextender;
 
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
@@ -39,24 +65,13 @@
             home-manager.nixosModules.home-manager
 
             {
+              # Passar o pkgs com overlay
+              nixpkgs.pkgs = pkgs;
+
               # Adicionar netextender aos pacotes do sistema
               environment.systemPackages = with pkgs; [
                 netextender
               ];
-
-              # Adicionar o serviço systemd
-              systemd.services.netextender = {
-                description = "SonicWall NetExtender Service";
-                after = [ "network.target" ];
-                wantedBy = [ "multi-user.target" ];
-                serviceConfig = {
-                  ExecStart = "${netextender}/bin/nxservice";
-                  Restart = "always";
-                  RestartSec = 5;
-                  Type = "simple";
-                  User = "root";
-                };
-              };
 
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
