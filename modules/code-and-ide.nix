@@ -11,5 +11,6 @@
     nodejs_22
     yarn
     vscode
+    codex
   ];
 }
