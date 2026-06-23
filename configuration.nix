@@ -207,16 +207,46 @@
     dedicatedServer.openFirewall = true;
   };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # Adicione as bibliotecas ao sistema
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     ppp
+    util-linux
+    libuuid
+    # Adicione outras bibliotecas importantes aqui
+    glib
+    gtk3
+    libGL
+    libx11
+    libxext
+    libxtst
+    libxi
+    libxrender
+    libxcb
+    libxkbcommon
+    dbus
+    fontconfig
+    freetype
   ];
 
+  # Configure o LD_LIBRARY_PATH com todas as bibliotecas
   environment.sessionVariables = {
-    LD_LIBRARY_PATH = "/run/current-system/sw/lib:${pkgs.util-linux}/lib:${pkgs.libuuid}/lib";
+    LD_LIBRARY_PATH =
+      "${pkgs.util-linux}/lib:"
+      + "${pkgs.libuuid}/lib:"
+      + "${pkgs.glib}/lib:"
+      + "${pkgs.gtk3}/lib:"
+      + "${pkgs.libGL}/lib:"
+      + "${pkgs.libx11}/lib:"
+      + "${pkgs.libxext}/lib:"
+      + "${pkgs.libxtst}/lib:"
+      + "${pkgs.libxi}/lib:"
+      + "${pkgs.libxrender}/lib:"
+      + "${pkgs.libxcb}/lib:"
+      + "${pkgs.libxkbcommon}/lib:"
+      + "${pkgs.dbus}/lib:"
+      + "${pkgs.fontconfig}/lib:"
+      + "${pkgs.freetype}/lib:"
+      + "/run/current-system/sw/lib";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
