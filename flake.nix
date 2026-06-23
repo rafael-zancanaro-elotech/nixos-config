@@ -29,15 +29,15 @@
             home-manager.nixosModules.home-manager
 
             {
-              # Sem nixpkgs.config aqui
-              home-manager.useGlobalPkgs = true;
+              # NÃO use useGlobalPkgs
+              home-manager.useGlobalPkgs = false;
               home-manager.useUserPackages = true;
 
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
 
-                # REMOVA esta linha também
-                # nixpkgs.config.allowUnfree = true;
+                # Configurar allowUnfree APENAS para este usuário
+                nixpkgs.config.allowUnfree = true;
 
                 home.packages = with pkgs; [
                   (pkgs.callPackage ./derivations/jaspersoft-studio.nix {
