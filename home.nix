@@ -28,17 +28,7 @@
     userEmail = "rafael.zancanaro@elotech.com.br";
   };
 
-  # ===== ÚNICA COISA QUE PRECISA =====
-  # Configurar o bash para ter o LD_LIBRARY_PATH
-  programs.bash = {
-    enable = true;
-    bashrcExtra = ''
-      export LD_LIBRARY_PATH="/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-    '';
+  home.sessionVariables = {
+    LD_LIBRARY_PATH = "/run/current-system/sw/lib";
   };
-
-  # Também para login shells
-  programs.bash.profileExtra = ''
-    export LD_LIBRARY_PATH="/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-  '';
 }
