@@ -200,13 +200,6 @@
     enable = true;
   };
 
-  # Bibliotecas adicionais
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
-
   # Adicione as bibliotecas ao sistema
   environment.systemPackages = with pkgs; [
     ppp
