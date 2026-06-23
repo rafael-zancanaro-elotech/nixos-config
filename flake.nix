@@ -20,10 +20,6 @@
       system = "x86_64-linux";
     in
     {
-      packages.${system} = {
-        # A definição do pacote será feita de outra forma
-      };
-
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
           inherit system;
@@ -33,17 +29,16 @@
             home-manager.nixosModules.home-manager
 
             {
-              # Configurar nixpkgs globalmente com allowUnfree
-              nixpkgs.config.allowUnfree = true;
-
-              # Usar o pkgs global com overlays se necessário
+              # Sem nixpkgs.config aqui
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
 
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
 
-                # Agora o pkgs já vem com allowUnfree configurado
+                # REMOVA esta linha também
+                # nixpkgs.config.allowUnfree = true;
+
                 home.packages = with pkgs; [
                   (pkgs.callPackage ./derivations/jaspersoft-studio.nix {
                     inherit (pkgs)
