@@ -27,6 +27,7 @@
     glow
     btop
     util-linux
+    libuuid
   ];
 
   # Example: configure git directly via home-manager
