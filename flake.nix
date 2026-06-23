@@ -36,7 +36,6 @@
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
 
-                # Configurar allowUnfree APENAS para este usuário
                 nixpkgs.config.allowUnfree = true;
 
                 home.packages = with pkgs; [
