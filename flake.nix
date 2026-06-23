@@ -12,19 +12,12 @@
   outputs =
     {
       self,
-      nixpkgs,
       home-manager,
+      pkgs,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
-
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfree = true;
-        };
-      };
 
       # Seu Jaspersoft Studio
       jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix {
@@ -43,7 +36,7 @@
       };
 
       nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
+        nixos = pkgs.lib.nixosSystem {
           inherit system;
 
           modules = [
@@ -56,7 +49,7 @@
 
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.zancanaro = { config, pkgs, ... }: {
+              home-manager.users.zancanaro = { pkgs, ... }: {
                 imports = [ ./home.nix ];
                 home.packages = with pkgs; [
                   jaspersoft-studio
