@@ -142,6 +142,8 @@
       pango
       cairo
       atk
+      util-linux
+      libuuid
     ];
   };
 
@@ -211,8 +213,6 @@
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     ppp
-    util-linux
-    libuuid
   ];
 
   environment.sessionVariables = {
