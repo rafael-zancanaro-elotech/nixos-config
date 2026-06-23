@@ -25,6 +25,7 @@
     ripgrep
     bat
     glow
+    btop
   ];
 
   # Example: configure git directly via home-manager
