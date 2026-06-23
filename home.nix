@@ -20,7 +20,6 @@
     bat
     glow
     btop
-    devenv
   ];
 
   programs.git = {
