@@ -3,14 +3,20 @@
   ...
 }:
 
-{
-  home.packages = with pkgs; [
-    zed-editor
-    jetbrains.idea
-    dbeaver-bin
-    nodejs_22
-    yarn
-    vscode
+let
+  codingTools = with pkgs; [
     codex
+    devenv
   ];
+in
+{
+
+  home.packages =
+    with pkgs;
+    codingTools
+    ++ [
+      zed-editor
+      jetbrains.idea
+      dbeaver-bin
+    ];
 }
