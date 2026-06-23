@@ -18,28 +18,10 @@
     }@inputs:
     let
       system = "x86_64-linux";
-
-      pkgs = import nixpkgs {
-        inherit system;
-        config = {
-          allowUnfree = true;
-        };
-      };
-
-      # Seu Jaspersoft Studio
-      jaspersoft-studio = pkgs.callPackage ./derivations/jaspersoft-studio.nix {
-        inherit (pkgs)
-          gsettings-desktop-schemas
-          gtk3
-          glib
-          glib-networking
-          ;
-      };
-
     in
     {
       packages.${system} = {
-        jaspersoft-studio = jaspersoft-studio;
+        # A definição do pacote será feita de outra forma
       };
 
       nixosConfigurations = {
@@ -51,15 +33,26 @@
             home-manager.nixosModules.home-manager
 
             {
-              # Usar o pkgs com overlays
-              nixpkgs.pkgs = pkgs;
+              # Configurar nixpkgs globalmente com allowUnfree
+              nixpkgs.config.allowUnfree = true;
 
+              # Usar o pkgs global com overlays se necessário
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
+
+                # Agora o pkgs já vem com allowUnfree configurado
                 home.packages = with pkgs; [
-                  jaspersoft-studio
+                  (pkgs.callPackage ./derivations/jaspersoft-studio.nix {
+                    inherit (pkgs)
+                      gsettings-desktop-schemas
+                      gtk3
+                      glib
+                      glib-networking
+                      ;
+                  })
                 ];
               };
             }
