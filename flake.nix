@@ -29,13 +29,13 @@
             home-manager.nixosModules.home-manager
 
             {
-              # NÃO use useGlobalPkgs
               home-manager.useGlobalPkgs = false;
               home-manager.useUserPackages = true;
 
               home-manager.users.zancanaro = { config, pkgs, ... }: {
                 imports = [ ./home.nix ];
 
+                # Configure também no home-manager para garantir
                 nixpkgs.config.allowUnfree = true;
 
                 home.packages = with pkgs; [
