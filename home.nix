@@ -7,7 +7,7 @@
     ./modules/code-and-ide.nix
     ./modules/social.nix
     ./modules/misc.nix
-    ./modules/canvas.nix
+    ./modules/home-canvas.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
