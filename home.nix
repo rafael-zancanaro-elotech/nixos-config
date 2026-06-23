@@ -7,6 +7,7 @@
     ./modules/code-and-ide.nix
     ./modules/social.nix
     ./modules/misc.nix
+    ./modules/canvas.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -35,33 +36,4 @@
     userEmail = "rafael.zancanaro@elotech.com.br";
   };
 
-  # Configurar .bashrc via home-manager
-  programs.bash = {
-    enable = true;
-    bashrcExtra = ''
-      # Configurar LD_LIBRARY_PATH para encontrar bibliotecas
-      export LD_LIBRARY_PATH="/nix/store/1scb6xccxlqy8rj9hfgf7ppqv99pfwq9-util-linux-minimal-2.42-lib/lib:/nix/store/gf6i4cbisapj28y2dnqhpk1s95vd2r36-util-linux-2.42-lib/lib:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-
-      # Adicionar outras bibliotecas importantes
-      export LD_LIBRARY_PATH="${pkgs.glib}/lib:${pkgs.gtk3}/lib:${pkgs.libGL}/lib:${pkgs.libx11}/lib:${pkgs.libxext}/lib:${pkgs.libxtst}/lib:${pkgs.libxi}/lib:${pkgs.libxrender}/lib:${pkgs.libxcb}/lib:${pkgs.libxkbcommon}/lib:${pkgs.dbus}/lib:${pkgs.fontconfig}/lib:${pkgs.freetype}/lib:$LD_LIBRARY_PATH"
-    '';
-  };
-
-  # OU, se você prefere usar .profile
-  programs.bash.profileExtra = ''
-    # Configurar LD_LIBRARY_PATH para encontrar bibliotecas
-    export LD_LIBRARY_PATH="/nix/store/1scb6xccxlqy8rj9hfgf7ppqv99pfwq9-util-linux-minimal-2.42-lib/lib:/nix/store/gf6i4cbisapj28y2dnqhpk1s95vd2r36-util-linux-2.42-lib/lib:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-
-    # Adicionar outras bibliotecas importantes
-    export LD_LIBRARY_PATH="${pkgs.glib}/lib:${pkgs.gtk3}/lib:${pkgs.libGL}/lib:${pkgs.libx11}/lib:${pkgs.libxext}/lib:${pkgs.libxtst}/lib:${pkgs.libxi}/lib:${pkgs.libxrender}/lib:${pkgs.libxcb}/lib:${pkgs.libxkbcommon}/lib:${pkgs.dbus}/lib:${pkgs.fontconfig}/lib:${pkgs.freetype}/lib:$LD_LIBRARY_PATH"
-  '';
-
-  home.sessionPath = [
-    "$HOME/.nix-profile/bin"
-    "/run/current-system/sw/bin"
-  ];
-
-  home.sessionVariables = {
-    LD_LIBRARY_PATH = "/nix/store/1scb6xccxlqy8rj9hfgf7ppqv99pfwq9-util-linux-minimal-2.42-lib/lib:/nix/store/gf6i4cbisapj28y2dnqhpk1s95vd2r36-util-linux-2.42-lib/lib:${pkgs.glib}/lib:${pkgs.gtk3}/lib:${pkgs.libGL}/lib:${pkgs.libx11}/lib:${pkgs.libxext}/lib:${pkgs.libxtst}/lib:${pkgs.libxi}/lib:${pkgs.libxrender}/lib:${pkgs.libxcb}/lib:${pkgs.libxkbcommon}/lib:${pkgs.dbus}/lib:${pkgs.fontconfig}/lib:${pkgs.freetype}/lib:/run/current-system/sw/lib";
-  };
 }
