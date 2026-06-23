@@ -4,7 +4,7 @@
 }:
 {
   imports = [
-    ../programs/ulauncher
+    ../programs/ulauncher.nix
   ];
   home.packages = with pkgs; [
     spotify
