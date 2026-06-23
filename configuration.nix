@@ -215,6 +215,10 @@
     libuuid
   ];
 
+  environment.sessionVariables = {
+    LD_LIBRARY_PATH = "/run/current-system/sw/lib:${pkgs.util-linux}/lib:${pkgs.libuuid}/lib";
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
