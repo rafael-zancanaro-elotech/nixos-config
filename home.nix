@@ -1,36 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-
-let
-  # Lista de bibliotecas
-  canvasLibraries = with pkgs; [
-    util-linux
-    libuuid
-    glib
-    gtk3
-    libGL
-    libx11
-    libxext
-    libxtst
-    libxi
-    libxrender
-    libxcb
-    libxkbcommon
-    dbus
-    fontconfig
-    freetype
-    cairo
-    pango
-    gdk-pixbuf
-    atk
-  ];
-
-  libraryPath = lib.makeSearchPath "lib" canvasLibraries;
-in
+{ config, pkgs, ... }:
 {
   home.username = "zancanaro";
   home.homeDirectory = "/home/zancanaro";
@@ -39,7 +7,6 @@ in
     ./modules/code-and-ide.nix
     ./modules/social.nix
     ./modules/misc.nix
-    ./modules/home-canvas.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -61,39 +28,17 @@ in
     userEmail = "rafael.zancanaro@elotech.com.br";
   };
 
-  # ===== CONFIGURAÇÃO DO BASH =====
+  # ===== ÚNICA COISA QUE PRECISA =====
+  # Configurar o bash para ter o LD_LIBRARY_PATH
   programs.bash = {
     enable = true;
-
-    # Isso vai gerar o ~/.bashrc
     bashrcExtra = ''
-      # LD_LIBRARY_PATH para as bibliotecas do canvas
-      export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-
-      # Aliases
-      alias ll='ls -la'
-      alias la='ls -A'
+      export LD_LIBRARY_PATH="/run/current-system/sw/lib:$LD_LIBRARY_PATH"
     '';
   };
 
-  # Também configurar o profile para login shells
+  # Também para login shells
   programs.bash.profileExtra = ''
-    export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="/run/current-system/sw/lib:$LD_LIBRARY_PATH"
   '';
-
-  # Fallback: forçar a criação do arquivo
-  home.file.".bashrc" = {
-    text = ''
-      # ~/.bashrc - Gerado pelo home-manager
-      export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-
-      if [ -f /etc/bashrc ]; then
-        . /etc/bashrc
-      fi
-    '';
-  };
-
-  home.sessionVariables = {
-    LD_LIBRARY_PATH = "${libraryPath}:/run/current-system/sw/lib";
-  };
 }
