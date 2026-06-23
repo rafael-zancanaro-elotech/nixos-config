@@ -7,7 +7,6 @@
     ./modules/code-and-ide.nix
     ./modules/social.nix
     ./modules/misc.nix
-    ./modules/canvas.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -21,11 +20,16 @@
     bat
     glow
     btop
+    devenv
   ];
 
   programs.git = {
     enable = true;
-    userName = "Rafael Monteiro Zancanaro";
-    userEmail = "rafael.zancanaro@elotech.com.br";
+    settings = {
+      user = {
+        name = "Rafael Monteiro Zancanaro";
+        email = "rafael.zancanaro@elotech.com.br";
+      };
+    };
   };
 }

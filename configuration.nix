@@ -8,7 +8,6 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./modules/canvas.nix
   ];
 
   # Bootloader.
@@ -143,8 +142,6 @@
       pango
       cairo
       atk
-      util-linux
-      libuuid
     ];
   };
 
@@ -211,44 +208,7 @@
   # Adicione as bibliotecas ao sistema
   environment.systemPackages = with pkgs; [
     ppp
-    util-linux
-    libuuid
-    # Adicione outras bibliotecas importantes aqui
-    glib
-    gtk3
-    libGL
-    libx11
-    libxext
-    libxtst
-    libxi
-    libxrender
-    libxcb
-    libxkbcommon
-    dbus
-    fontconfig
-    freetype
   ];
-
-  # Configure o LD_LIBRARY_PATH com todas as bibliotecas
-  environment.sessionVariables = {
-    LD_LIBRARY_PATH =
-      "${pkgs.util-linux}/lib:"
-      + "${pkgs.libuuid}/lib:"
-      + "${pkgs.glib}/lib:"
-      + "${pkgs.gtk3}/lib:"
-      + "${pkgs.libGL}/lib:"
-      + "${pkgs.libx11}/lib:"
-      + "${pkgs.libxext}/lib:"
-      + "${pkgs.libxtst}/lib:"
-      + "${pkgs.libxi}/lib:"
-      + "${pkgs.libxrender}/lib:"
-      + "${pkgs.libxcb}/lib:"
-      + "${pkgs.libxkbcommon}/lib:"
-      + "${pkgs.dbus}/lib:"
-      + "${pkgs.fontconfig}/lib:"
-      + "${pkgs.freetype}/lib:"
-      + "/run/current-system/sw/lib";
-  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
