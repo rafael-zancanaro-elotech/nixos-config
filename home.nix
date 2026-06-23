@@ -26,6 +26,7 @@
     bat
     glow
     btop
+    util-linux
   ];
 
   # Example: configure git directly via home-manager
