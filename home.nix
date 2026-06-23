@@ -9,7 +9,6 @@
     ./modules/misc.nix
   ];
 
-  nixpkgs.config.allowUnfree = true;
   home.stateVersion = "26.05";
   programs.home-manager.enable = true;
 
