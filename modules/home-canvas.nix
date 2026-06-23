@@ -1,7 +1,13 @@
-{ pkgs, lib, ... }:
+# modules/home-canvas.nix
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  libraryPaths = with pkgs; [
+  canvasLibraries = with pkgs; [
     util-linux
     libuuid
     glib
@@ -23,22 +29,20 @@ let
     atk
   ];
 
-  canvasLibraries = libraryPaths;
-
   libraryPath = lib.makeSearchPath "lib" canvasLibraries;
 in
 {
-  # Para usar no nix-ld (configuration.nix)
-  config.nix-ld.libraries = canvasLibraries;
+  # Configurações do home-manager (NÃO use environment.systemPackages aqui)
+  home.sessionVariables = {
+    LD_LIBRARY_PATH = "${libraryPath}:/run/current-system/sw/lib";
+  };
 
-  # Para instalar no sistema
-  config.environment.systemPackages = canvasLibraries;
-
-  # Para as variáveis de ambiente (home.nix)
-  config.home.sessionVariables.LD_LIBRARY_PATH = "${libraryPath}:/run/current-system/sw/lib";
-
-  # Para o bashrc
-  config.programs.bash.bashrcExtra = ''
-    export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
-  '';
+  programs.bash = {
+    bashrcExtra = ''
+      export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
+    '';
+    profileExtra = ''
+      export LD_LIBRARY_PATH="${libraryPath}:/run/current-system/sw/lib:$LD_LIBRARY_PATH"
+    '';
+  };
 }

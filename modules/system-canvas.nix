@@ -1,3 +1,4 @@
+# modules/system-canvas.nix
 {
   config,
   pkgs,
@@ -29,7 +30,7 @@ let
   ];
 in
 {
-  # Configurações do sistema
+  # Configurações do sistema (NÃO use home.sessionVariables aqui)
   programs.nix-ld = {
     enable = true;
     libraries = canvasLibraries;
