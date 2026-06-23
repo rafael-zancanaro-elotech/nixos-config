@@ -7,6 +7,7 @@
     ./modules/code-and-ide.nix
     ./modules/social.nix
     ./modules/misc.nix
+    ./modules/canvas.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -26,9 +27,5 @@
     enable = true;
     userName = "Rafael Monteiro Zancanaro";
     userEmail = "rafael.zancanaro@elotech.com.br";
-  };
-
-  home.sessionVariables = {
-    LD_LIBRARY_PATH = "/run/current-system/sw/lib";
   };
 }
