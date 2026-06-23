@@ -35,6 +35,13 @@
     userEmail = "rafael.zancanaro@elotech.com.br";
   };
 
+  programs.bash.enable = true;
+
+  home.sessionPath = [
+    "$HOME/.nix-profile/bin"
+    "/run/current-system/sw/bin"
+  ];
+
   home.sessionVariables = {
     LD_LIBRARY_PATH = "/nix/store/1scb6xccxlqy8rj9hfgf7ppqv99pfwq9-util-linux-minimal-2.42-lib/lib:/nix/store/gf6i4cbisapj28y2dnqhpk1s95vd2r36-util-linux-2.42-lib/lib:${pkgs.glib}/lib:${pkgs.gtk3}/lib:${pkgs.libGL}/lib:${pkgs.libx11}/lib:${pkgs.libxext}/lib:${pkgs.libxtst}/lib:${pkgs.libxi}/lib:${pkgs.libxrender}/lib:${pkgs.libxcb}/lib:${pkgs.libxkbcommon}/lib:${pkgs.dbus}/lib:${pkgs.fontconfig}/lib:${pkgs.freetype}/lib:/run/current-system/sw/lib";
   };
