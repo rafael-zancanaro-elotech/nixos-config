@@ -203,6 +203,8 @@
   # Adicione as bibliotecas ao sistema
   environment.systemPackages = with pkgs; [
     ppp
+    gnomeExtensions.forge
+    gnome-gnome-extension-manager
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
