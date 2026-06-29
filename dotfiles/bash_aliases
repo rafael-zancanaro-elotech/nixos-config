@@ -3,3 +3,7 @@ envfor() {
     --data-urlencode "q=$*" \
     | jq -r '.devenv_nix'
 }
+
+rebuild() {
+    sudo nixos rebuild switch --flake $@
+}
