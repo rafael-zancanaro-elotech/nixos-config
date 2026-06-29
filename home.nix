@@ -19,6 +19,7 @@
     bat
     glow
     btop
+    jq
   ];
 
   programs.git = {
@@ -30,4 +31,6 @@
       };
     };
   };
+
+  home.file.".bashrc".source = ./dotfiles/bash_aliases;
 }

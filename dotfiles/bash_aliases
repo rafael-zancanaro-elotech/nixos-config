@@ -1,0 +1,5 @@
+envfor() {
+    curl -s -X POST -G "https://devenv.new/api/generate" \
+    --data-urlencode "q=$*" \
+    | jq -r '.devenv_nix'
+}
