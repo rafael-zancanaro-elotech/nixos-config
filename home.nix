@@ -20,6 +20,7 @@
     glow
     btop
     jq
+    xournalpp
   ];
 
   programs.git = {
