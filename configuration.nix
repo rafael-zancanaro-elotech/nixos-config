@@ -150,12 +150,6 @@
   # Install firefox.
   programs.firefox.enable = true;
 
-  dconf.settings = {
-    "org/gnome/epiphany/web" = {
-      enable-webextensions = true;
-    };
-  };
-
   networking.extraHosts = ''
     127.0.0.1       angulo.localnet.qa.elotech.com.br
     127.0.0.1       ibipora.localnet.qa.elotech.com.br
