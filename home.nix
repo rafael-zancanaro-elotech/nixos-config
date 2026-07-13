@@ -23,12 +23,6 @@
     xournalpp
   ];
 
-  dconf.settings = {
-    "org/gnome/epiphany/web" = {
-      enable-webextensions = true;
-    };
-  };
-
   programs.git = {
     enable = true;
     settings = {
