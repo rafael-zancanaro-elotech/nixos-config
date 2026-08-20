@@ -134,7 +134,6 @@
       glib
       glib-networking
       gsettings-desktop-schemas
-      gtk-engine-murrine
       librsvg
       libxml2
       shared-mime-info
