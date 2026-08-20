@@ -9,7 +9,7 @@ let
     devenv
   ];
   codexStuff = with pkgs; [
-    python3Full
+    python3
   ];
 in
 {
