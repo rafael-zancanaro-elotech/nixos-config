@@ -101,6 +101,10 @@
       nil
       nixd
     ];
+    fonts.packages = with pkgs; [
+      corefonts
+      vista-fonts
+    ];
   };
   programs.nix-ld = {
     enable = true;
