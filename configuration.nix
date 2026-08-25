@@ -102,6 +102,7 @@
       nixd
     ];
   };
+  nixpkgs.config.allowUnfree = true;
   fonts.packages = with pkgs; [
     corefonts
     vista-fonts
