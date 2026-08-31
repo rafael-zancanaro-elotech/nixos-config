@@ -8,5 +8,6 @@
   ];
   home.packages = with pkgs; [
     spotify
+    appimage-run
   ];
 }
