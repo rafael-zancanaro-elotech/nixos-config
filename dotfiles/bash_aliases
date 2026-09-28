@@ -4,6 +4,10 @@ envfor() {
     | jq -r '.devenv_nix'
 }
 
+mkenv() {
+    bash ./mkenv.sh $1
+}
+
 rebuild() {
     sudo nixos-rebuild switch --flake $@
 }
