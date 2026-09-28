@@ -6,7 +6,7 @@ envfor() {
 
 mkenv() {
     working_directory=$(pwd)
-    bash "$working_directory/dotfiles/mkenv.sh" $1
+    bash "$HOME/nixos-config/dotfiles/mkenv.sh" $1
 }
 
 rebuild() {
