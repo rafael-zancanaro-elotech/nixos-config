@@ -5,7 +5,8 @@ envfor() {
 }
 
 mkenv() {
-    bash ./mkenv.sh $1
+    working_directory=$(pwd)
+    bash "$working_directory/dotfiles/mkenv.sh" $1
 }
 
 rebuild() {
