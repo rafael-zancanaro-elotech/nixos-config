@@ -209,6 +209,7 @@
     ppp
     gnomeExtensions.forge
     gnome-extension-manager
+    gnomeExtensions.wiggle
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
