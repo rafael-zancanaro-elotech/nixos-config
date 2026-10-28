@@ -22,5 +22,6 @@ in
       zed-editor
       jetbrains.idea
       dbeaver-bin
+      apostrophe
     ];
 }
