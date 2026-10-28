@@ -10,5 +10,6 @@
     spotify
     appimage-run
     todoist-electron
+    logseq
   ];
 }
